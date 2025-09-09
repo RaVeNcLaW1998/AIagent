@@ -12,10 +12,16 @@ def main():
 
     client = genai.Client(api_key=api_key)
 
+    # check for prompt
     if len(sys.argv) < 2:
         print("we need a prompt")
         sys.exit(1)
     user_prompt = sys.argv[1]
+
+    # flag to show the details of the prompt
+    verbose_flag = False
+    if len(sys.argv) == 3 and sys.argv[2] == "--verbose":
+        verbose_flag = True
 
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)]),
@@ -32,8 +38,10 @@ def main():
         print("response is malformed")
         return
     print(response.text)
-    print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-    print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+    if verbose_flag:
+        print(f"User prompt: {user_prompt}")
+        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
 
 main()
