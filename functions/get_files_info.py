@@ -4,7 +4,6 @@ import os
 def get_files_info(working_directory, directory="."):
     try:
         full_path = os.path.abspath(os.path.join(working_directory, directory))
-        print(full_path)
 
         if not full_path.startswith(os.path.abspath(working_directory)):
             return f'Error: "{directory}" is not a directory in our working directory'
