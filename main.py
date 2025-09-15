@@ -57,35 +57,50 @@ def main():
     All paths you provide should be relative to the working directory. You do not need to specify the working directory in your function calls as it is automatically injected for security reasons.
     """
     
-    # send prompt
-    response = client.models.generate_content(
-        model= MODEL,
-        contents=messages,
-        config=types.GenerateContentConfig(tools=[available_functions],system_instruction=system_prompt),
-    )
+    max_iters = 20
+    for i in range(1,max_iters):
+        # send prompt
+        try:
+            #print(messages)
+            response = client.models.generate_content(
+            model= MODEL,
+            contents=messages,
+            config=types.GenerateContentConfig(tools=[available_functions],system_instruction=system_prompt),
+            )
+            
+            # print response
+            if response is None or response.usage_metadata is None:
+                print("response is malformed")
+                return
+            
+            #print the prompt details
+            if verbose_flag:
+                print(f"User prompt: {user_prompt}")
+                print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+                print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
 
-    # print response
-    if response is None or response.usage_metadata is None:
-        print("response is malformed")
-        return
-    
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            function_call_result = call_function(function_call_part,verbose_flag)
-            if not function_call_result.parts[0].function_response.response:
-                raise Exception("No response form the function call")
+            # insert all functions to call into the messages list
+            if response.candidates:
+                for candidate in response.candidates:
+                   if candidate is None or candidate.content is None:
+                    continue
+                messages.append(candidate.content)
+            
+            if response.function_calls:
+                for function_call_part in response.function_calls:
+                    function_call_result = call_function(function_call_part,verbose_flag)
+                    if not function_call_result.parts[0].function_response.response:
+                        raise Exception("No response form the function call")
+                    else:
+                        if verbose_flag:
+                            print(f"-> {function_call_result.parts[0].function_response.response}")
+                    messages.append(function_call_result)
+                        
             else:
-                if verbose_flag:
-                    print(f"-> {function_call_result.parts[0].function_response.response}")
-                
-    else:
-        print(response.text)
-        
-    #print the prompt details
-    if verbose_flag:
-        print(f"User prompt: {user_prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-
+                print(f"Final response : {response.text}")
+                return
+    
+        except Exception as e:
+            print(f"Error while generating content from the Agent {e}")
 
 main()
