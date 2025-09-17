@@ -54,9 +54,9 @@ uv sync
 This will read your pyproject.toml / uv.lock and set up everything automatically.
 
 
-⚠️ Important: Never commit .env to GitHub. Add it to .gitignore.
+Important: Never commit .env to GitHub. Add it to .gitignore.
 
-▶️ Usage
+Usage
 
 Run the agent with a user prompt:
 
@@ -67,7 +67,7 @@ Verbose mode (shows token counts + intermediate results):
 
 python main.py "Read the content of app.py" --verbose
 
-🛠️ Example Tasks
+Example Tasks
 
 List files: "Show me all files in ./calculator"
 
@@ -77,7 +77,7 @@ Write file: "Create a new file test.py with print('Hello AI')"
 
 Run file: "Run test.py"
 
-🔐 Security Notes
+Security Notes
 
 All file operations are sandboxed inside the working directory (./calculator by default).
 
@@ -85,7 +85,7 @@ Your API key is read from .env only—never hardcode keys.
 
 Rotate your key if it’s exposed.
 
-📌 Config
+Config
 
 Model: Defined in config.py → MODEL = "gemini-2.0-flash-001"
 
