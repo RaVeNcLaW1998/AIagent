@@ -82,15 +82,16 @@ def main():
             # insert all functions to call into the messages list
             if response.candidates:
                 for candidate in response.candidates:
-                   if candidate is None or candidate.content is None:
-                    continue
-                messages.append(candidate.content)
+                    if candidate and candidate.content:
+                        messages.append(candidate.content)
+
             
             if response.function_calls:
                 for function_call_part in response.function_calls:
                     function_call_result = call_function(function_call_part,verbose_flag)
-                    if not function_call_result.parts[0].function_response.response:
-                        raise Exception("No response form the function call")
+                    if (not function_call_result.parts or not hasattr(function_call_result.parts[0], "function_response") or not function_call_result.parts[0].function_response.response):
+                        raise Exception("No response from the function call")
+
                     else:
                         if verbose_flag:
                             print(f"-> {function_call_result.parts[0].function_response.response}")
