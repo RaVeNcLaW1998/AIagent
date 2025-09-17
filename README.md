@@ -1,22 +1,22 @@
-AI Coding Agent with Gemini
+# AI Coding Agent with Gemini
 
-This project is a local AI coding assistant powered by Google’s Gemini API.
+## An example project is a local AI coding assistant powered by Google’s Gemini API.
 
-It accepts user prompts, plans function calls, and can list, read, write, and execute Python files in a working directory.
+This projects accepts user prompts as CLI args, plans the function calls, and can list, read, write, and execute Python files in a specific working directory.
+The various functionalities the agent can do are:
 
-Features
+* List files in the directory
 
--List files and directories
+* Read file contents (with a max character limit)
 
--Read file contents (with a character limit)
+* Write or update Python files
 
--Write or update Python files
+* Run Python files with optional arguments
 
--Run Python files with optional arguments
+* Function-calling loop for step-by-step execution planning
 
--Function-calling loop for step-by-step execution planning
+## Project Structure
 
-Project Structure
 .
 ├── main.py                 # Entry point: AI agent loop
 ├── config.py               # Configuration (model, limits)
@@ -29,9 +29,15 @@ Project Structure
 │   ├── run_python_file.py  # Runs Python scripts
 │   └── call_function.py    # Dispatcher for tool calls
 │
+├── calculator/             # Example calculator app
+│   ├── pkg/                # Lists files
+│   ├── main.py             # Reads file content
+│   ├── tests.py            # Writes/updates files
+│
 ├── *.pyc                   # Compiled helper files
 
-⚙️ Setup
+## Setup
+
 1. Clone the repo
 git clone https://github.com/RaVeNcLaW1998/AIagent.git
 cd AIagent
@@ -41,7 +47,7 @@ python3 -m venv venv
 source venv/bin/activate   # Linux/Mac
 venv\Scripts\activate      # Windows
 
-2. Install dependencies with uv
+3. Install dependencies with uv
 
 If you don’t already have uv installed:
 
@@ -56,7 +62,7 @@ This will read your pyproject.toml / uv.lock and set up everything automatically
 
 Important: Never commit .env to GitHub. Add it to .gitignore.
 
-Usage
+## Usage
 
 Run the agent with a user prompt:
 
@@ -67,7 +73,7 @@ Verbose mode (shows token counts + intermediate results):
 
 python main.py "Read the content of app.py" --verbose
 
-Example Tasks
+## Example Tasks
 
 List files: "Show me all files in ./calculator"
 
@@ -77,7 +83,7 @@ Write file: "Create a new file test.py with print('Hello AI')"
 
 Run file: "Run test.py"
 
-Security Notes
+## Security Notes
 
 All file operations are sandboxed inside the working directory (./calculator by default).
 
@@ -85,8 +91,12 @@ Your API key is read from .env only—never hardcode keys.
 
 Rotate your key if it’s exposed.
 
-Config
+## Config
 
 Model: Defined in config.py → MODEL = "gemini-2.0-flash-001"
 
 Read limit: MAX_CHARS = 10000 (prevents huge file reads)
+
+## Work in Progres
+
+Planning on adding Code Refactoring Tools, Docstring / Comment Generator, Bug Detection & Fix Suggestions or even wrap it into a simple web UI using React.
